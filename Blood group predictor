@@ -1,0 +1,50 @@
+# Blood group finder
+def possible_blood_groups(mother, father):
+    ABO_combinations = {
+        'A': ['AA', 'AO'],
+        'B': ['BB', 'BO'],
+        'AB': ['AB'],
+        'O': ['OO']
+    }
+
+    Rh_combinations = {
+        '+': ['++', '+-'],
+        '-': ['--']
+    }
+
+    ABO1 = ABO_combinations[mother['ABO']]
+    ABO2 = ABO_combinations[father['ABO']]
+    Rh1 = Rh_combinations[mother['Rh']]
+    Rh2 = Rh_combinations[father['Rh']]
+
+    blood_groups = set()
+    
+    for abo in ABO1:
+        for ab in ABO2:
+            for rh in Rh1:
+                for r in Rh2:
+                    # Determine the child's ABO blood group
+                    if 'O' in abo and 'O' in ab:
+                        blood_group = 'O'
+                    elif ('A' in abo and 'A' in ab) or ('A' in abo and 'O' in ab) or ('O' in abo and 'A' in ab):
+                        blood_group = 'A'
+                    elif ('B' in abo and 'B' in ab) or ('B' in abo and 'O' in ab) or ('O' in abo and 'B' in ab):
+                        blood_group = 'B'
+                    elif ('A' in abo and 'B' in ab) or ('B' in abo and 'A' in ab):
+                        blood_group = 'AB'
+                    else:
+                        continue
+
+                    # Combine ABO and Rh factors
+                    blood_groups.add(blood_group + rh[0] + r[0])
+
+    return blood_groups
+
+# Example usage:
+mother_bg = input("Enter mother's blood group (e.g., A+, B-, AB+): ").strip().split()
+father_bg = input("Enter father's blood group (e.g., A+, B-, AB+): ").strip().split()
+
+mother = {'ABO': mother_bg[0], 'Rh': mother_bg[1]}
+father = {'ABO': father_bg[0], 'Rh': father_bg[1]}
+
+print("Child's possible blood groups: ", possible_blood_groups(mother, father))
